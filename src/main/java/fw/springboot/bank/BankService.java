@@ -9,7 +9,7 @@ public interface BankService {
 	
 	public List<BankAccount> getAllAccounts();
 	
-	public BankAccount getOneAccount();
+	public BankAccount getOneAccount(String accountNumber);
 	
 	public BigDecimal getBalance(String accountNumber);
 	
