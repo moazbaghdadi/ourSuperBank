@@ -3,6 +3,9 @@ package fw.springboot.bank;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -12,17 +15,20 @@ public class ATMController {
 	private BankService bankService;
 	
 	//Methode getBalance
-	public BigDecimal getBalance (String accountNumber){
+	@RequestMapping(value="/balance/{accountNumber}", method=RequestMethod.GET)
+	public BigDecimal getBalance (@PathVariable("accountNumber") String accountNumber){
 		return bankService.getBalance(accountNumber);
 	}
 	
 	//Methode deposit
-	public BigDecimal deposit (String accountNumber, BigDecimal amount){
+	@RequestMapping(value="/account/deposit/{accountNumber}/{amount}", method=RequestMethod.GET)
+	public BigDecimal deposit (@PathVariable("accountNumber")String accountNumber, @PathVariable("amount")BigDecimal amount){
 		return bankService.book(accountNumber, amount);
 	}
 	
 	//Methode withdrawal
-	public BigDecimal withdrawal (String accountNumber,  BigDecimal amount){
+	@RequestMapping(value="/account/withdrawal/{accountNumber}/{amount}", method=RequestMethod.GET)
+	public BigDecimal withdrawal (@PathVariable("accountNumber") String accountNumber, @PathVariable("amount") BigDecimal amount){
 		return bankService.book(accountNumber, amount);
 	}
 
