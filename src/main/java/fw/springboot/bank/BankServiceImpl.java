@@ -37,17 +37,18 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public BankAccount getOneAccount(String accountNumber) {
-		return accountRepository.findBankAccountByAccountNumber(accountNumber);
+		// [krausg] parameter type check wird durch aop gemacht, meint [fabio]
+		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
+		if (bankAccount != null) {
+			return bankAccount;
+		} else {
+			throw new BankServiceException("Account number not found in Bank");
+		}
 	}
 
 	@Override
 	public BigDecimal getBalance(String accountNumber) {
-		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
-		if (bankAccount != null) {
-			return bankAccount.getBalance();
-		} else {
-			throw new BankServiceException("Account number not found in Bank");
-		}
+		return getOneAccount(accountNumber).getBalance();
 	}
 
 	@Override
