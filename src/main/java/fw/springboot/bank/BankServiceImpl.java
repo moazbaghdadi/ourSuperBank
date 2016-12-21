@@ -3,15 +3,29 @@ package fw.springboot.bank;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BankServiceImpl implements BankService {
 
+	@Autowired
+	private BankAccountRepository accountRepository;
+
+	@Autowired
+	private NumberGenerator numberGenerator;
+
+	public NumberGenerator getNumberGenerator() {
+		return numberGenerator;
+	}
+
+	public void setNumberGenerator(NumberGenerator numberGenerator) {
+		this.numberGenerator = numberGenerator;
+	}
+
 	@Override
 	public BankAccount createAccount() {
-		// TODO Auto-generated method stub
-		return null;
+		return new BankAccount(numberGenerator.getNextNumber());
 	}
 
 	@Override
@@ -36,6 +50,14 @@ public class BankServiceImpl implements BankService {
 	public BigDecimal book(String accountNumber, BigDecimal amount) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public BankAccountRepository getAccountRepository() {
+		return accountRepository;
+	}
+
+	public void setAccountRepository(BankAccountRepository accountRepository) {
+		this.accountRepository = accountRepository;
 	}
 
 }
