@@ -1,4 +1,4 @@
-package fw.springboot.bank;
+package fw.springboot.bank.exception;
 
 public class BankServiceException extends RuntimeException {
 
