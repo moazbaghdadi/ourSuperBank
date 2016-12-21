@@ -16,12 +16,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fw.springboot.bank.ATMController;
 import fw.springboot.bank.BankAccount;
+import fw.springboot.bank.BankApplication;
 import fw.springboot.bank.BankService;
 import fw.springboot.bank.BankServiceImpl;
-import fw.springboot.bank.SpringbootDemoApplication;
+
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringbootDemoApplication.class })
+@SpringBootTest(classes = {BankApplication.class })
 public class DepositTest {
 	@Autowired
 	BankServiceImpl bankServiceImpl;
@@ -74,20 +75,12 @@ public class DepositTest {
 	@Test
 	public void testWithdrawalMethod() throws Exception {
 		BigDecimal result = atmController.withdrawal(bankAccount.getAccountNumber(), new BigDecimal(4.5));
-		Assert.assertEquals(new BigDecimal(4.5).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
+		Assert.assertEquals(new BigDecimal(-4.5).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
 	
 		
 	}
 	
-	@Test
-	public void testNegativeAmountAtBookMethod() throws Exception {
-		
-		BigDecimal result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(-3.175));
-		//Assert.assert
 
-		//Assert.assertEquals(new BigDecimal(3.175).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
-		
-	}
 	
 	
 }
