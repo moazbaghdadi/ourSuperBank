@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fw.springboot.bank.BankAccount;
+import fw.springboot.bank.BankAccountRepository;
 import fw.springboot.bank.BankServiceImpl;
 import fw.springboot.bank.SpringbootDemoApplication;
 
@@ -20,6 +21,8 @@ public class CreateAccountTest {
 	@Autowired
 	BankServiceImpl bankServiceImpl;
 	BankAccount bankAccount, acc, acc2;
+	@Autowired
+	BankAccountRepository bAccRep;
 
 	@Test
 	public void testCreateAccountNotNull() {
@@ -28,8 +31,9 @@ public class CreateAccountTest {
 		Integer accId = bankAccount.getId();
 		Assert.assertNotNull(bankAccount);
 		// System.out.println(acc.getAccountNumber());
-		Assert.assertEquals(bankAccount.getId(), (Integer) 1);
+		Assert.assertEquals(bAccRep.count(), (long) bankAccount.getId());
 	}
+
 
 	@Test
 	public void testCreateTwoAccount() {
@@ -44,6 +48,7 @@ public class CreateAccountTest {
 	@Test
 	public void testCreateAccountAndGetItFromDb() {
 
+		bankAccount = bankServiceImpl.createAccount();
 		bankAccount = bankServiceImpl.createAccount();
 		String num = bankAccount.getAccountNumber();
 		BigDecimal balance1 = bankAccount.getBalance();
