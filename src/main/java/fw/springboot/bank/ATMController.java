@@ -27,9 +27,9 @@ public class ATMController {
 	}
 	
 	//Methode withdrawal
-	@RequestMapping(value="/withdrawal/{accountNumber}/{amount}", method=RequestMethod.GET)
+	@RequestMapping(value="/withdrawal/{accountNumber}/{amount}", method=RequestMethod.POST)
 	public BigDecimal withdrawal (@PathVariable("accountNumber") String accountNumber, @PathVariable("amount") BigDecimal amount){
-		return bankService.book(accountNumber, amount);
+		return bankService.book(accountNumber, amount.negate());
 	}
 
 }
