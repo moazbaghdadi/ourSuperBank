@@ -59,7 +59,7 @@ public class BankServiceImpl implements BankService {
 		// to be null or empty");
 		// }
 
-		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
+		BankAccount bankAccount = getOneAccount(accountNumber);
 		if (isGreaterEqualsThanZero(amount)) {
 			bankAccount.setBalance(bankAccount.getBalance().add(amount));
 		} else {
