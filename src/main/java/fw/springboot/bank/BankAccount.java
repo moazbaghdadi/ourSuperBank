@@ -14,7 +14,7 @@ public class BankAccount {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String accountNumber;
-	private BigDecimal balance;
+	private BigDecimal balance=new BigDecimal(0.0);
 
 	public BankAccount() {
 		// for spring
