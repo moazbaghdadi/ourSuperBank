@@ -21,13 +21,13 @@ public class ATMController {
 	}
 	
 	//Methode deposit
-	@RequestMapping(value="/account/deposit/{accountNumber}/{amount}", method=RequestMethod.GET)
+	@RequestMapping(value="/deposit/{accountNumber}/{amount}", method=RequestMethod.POST)
 	public BigDecimal deposit (@PathVariable("accountNumber")String accountNumber, @PathVariable("amount")BigDecimal amount){
 		return bankService.book(accountNumber, amount);
 	}
 	
 	//Methode withdrawal
-	@RequestMapping(value="/account/withdrawal/{accountNumber}/{amount}", method=RequestMethod.GET)
+	@RequestMapping(value="/withdrawal/{accountNumber}/{amount}", method=RequestMethod.GET)
 	public BigDecimal withdrawal (@PathVariable("accountNumber") String accountNumber, @PathVariable("amount") BigDecimal amount){
 		return bankService.book(accountNumber, amount);
 	}
