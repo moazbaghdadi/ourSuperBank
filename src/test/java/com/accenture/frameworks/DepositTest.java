@@ -71,6 +71,24 @@ public class DepositTest {
 		
 	}
 	
+	@Test
+	public void testWithdrawalMethod() throws Exception {
+		BigDecimal result = atmController.withdrawal(bankAccount.getAccountNumber(), new BigDecimal(4.5));
+		Assert.assertEquals(new BigDecimal(4.5).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
+	
+		
+	}
+	
+	@Test
+	public void testNegativeAmountAtBookMethod() throws Exception {
+		
+		BigDecimal result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(-3.175));
+		//Assert.assert
+
+		//Assert.assertEquals(new BigDecimal(3.175).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
+		
+	}
+	
 	
 }
 
