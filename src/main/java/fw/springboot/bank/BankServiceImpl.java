@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fw.springboot.bank.exception.BankServiceException;
+
 @Service
 public class BankServiceImpl implements BankService {
 
@@ -37,34 +39,42 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public BankAccount getOneAccount(String accountNumber) {
-		return accountRepository.findBankAccountByAccountNumber(accountNumber);
+		// [krausg] parameter type check wird durch aop gemacht, meint [fabio]
+		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
+		if (bankAccount != null) {
+			return bankAccount;
+		} else {
+			throw new BankServiceException("Account number not found in Bank");
+		}
 	}
 
 	@Override
 	public BigDecimal getBalance(String accountNumber) {
-		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
-		return bankAccount.getBalance();
+		return getOneAccount(accountNumber).getBalance();
 	}
 
 	@Override
 	public BigDecimal book(String accountNumber, BigDecimal amount) {
-		if (accountNumber == null || accountNumber.length() < 0) {
-			throw new BankServiceBookingException("AccountNumber is NOT allowed to be null or empty");
-		}
+		// [krausg] wird ersetzt durch aop, meint [fabio]
+		// if (accountNumber == null || accountNumber.length() <= 0) {
+		// throw new BankServiceException("AccountNumber is NOT allowed
+		// to be null or empty");
+		// }
 
-		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
-		if (isGreaterThanZero(amount)) {
-			bankAccount.setBalance(bankAccount.getBalance().add(amount));
-		} else {
-			bankAccount.setBalance(bankAccount.getBalance().subtract(amount));
-		}
-
+		BankAccount bankAccount = getOneAccount(accountNumber);
+		bankAccount.setBalance(bankAccount.getBalance().add(amount));
 		accountRepository.save(bankAccount);
+
 		return bankAccount.getBalance();
 	}
 
-	private boolean isGreaterThanZero(BigDecimal amount) {
-		return amount.compareTo(BigDecimal.ZERO) > 0;
+	/**
+	 * Checks if a BigDecimal is greater than 0
+	 * @param amount bigdecimal instance
+	 * @return boolean will be true, if it is greater or equals than 0 false 
+	 */
+	private boolean isGreaterEqualsThanZero(BigDecimal amount) {
+		return amount.compareTo(BigDecimal.ZERO) >= 0;
 	}
 
 	public BankAccountRepository getAccountRepository() {
