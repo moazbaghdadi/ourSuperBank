@@ -43,14 +43,18 @@ public class BankServiceImpl implements BankService {
 	@Override
 	public BigDecimal getBalance(String accountNumber) {
 		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
-		return bankAccount.getBalance();
+		if (bankAccount != null) {
+			return bankAccount.getBalance();
+		} else {
+			throw new BankServiceException("Account number not found in Bank");
+		}
 	}
 
 	@Override
 	public BigDecimal book(String accountNumber, BigDecimal amount) {
 		// [krausg] wird ersetzt durch aop, meint [fabio]
 		// if (accountNumber == null || accountNumber.length() <= 0) {
-		// throw new BankServiceBookingException("AccountNumber is NOT allowed
+		// throw new BankServiceException("AccountNumber is NOT allowed
 		// to be null or empty");
 		// }
 
