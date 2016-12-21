@@ -32,26 +32,39 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public List<BankAccount> getAllAccounts() {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<BankAccount>) accountRepository.findAll();
 	}
 
 	@Override
 	public BankAccount getOneAccount(String accountNumber) {
-		// TODO Auto-generated method stub
-		return null;
+		return accountRepository.findBankAccountByAccountNumber(accountNumber);
 	}
 
 	@Override
 	public BigDecimal getBalance(String accountNumber) {
-		// TODO Auto-generated method stub
-		return null;
+		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
+		return bankAccount.getBalance();
 	}
 
 	@Override
 	public BigDecimal book(String accountNumber, BigDecimal amount) {
-		// accountRepository.findBankAccountByAccountNumber(accountNumber)
-		return null;
+		if (accountNumber == null || accountNumber.length() < 0) {
+			throw new BankServiceBookingException("AccountNumber is NOT allowed to be null or empty");
+		}
+
+		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
+		if (isGreaterThanZero(amount)) {
+			bankAccount.setBalance(bankAccount.getBalance().add(amount));
+		} else {
+			bankAccount.setBalance(bankAccount.getBalance().subtract(amount));
+		}
+
+		accountRepository.save(bankAccount);
+		return bankAccount.getBalance();
+	}
+
+	private boolean isGreaterThanZero(BigDecimal amount) {
+		return amount.compareTo(BigDecimal.ZERO) > 0;
 	}
 
 	public BankAccountRepository getAccountRepository() {
