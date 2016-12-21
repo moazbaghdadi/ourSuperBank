@@ -3,57 +3,74 @@ package com.accenture.frameworks;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import fw.springboot.bank.ATMController;
 import fw.springboot.bank.BankAccount;
+import fw.springboot.bank.BankService;
 import fw.springboot.bank.BankServiceImpl;
 import fw.springboot.bank.SpringbootDemoApplication;
 
-
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes={SpringbootDemoApplication.class})
+@SpringBootTest(classes = { SpringbootDemoApplication.class })
 public class DepositTest {
 	@Autowired
 	BankServiceImpl bankServiceImpl;
 	BankAccount bankAccount;
-	
-	@Before 
+	BankService bankService;
+	@Autowired
+	ATMController atmController;
+
+	@Before
 	public void init() {
-		bankAccount=bankServiceImpl.createAccount();
-		
-		
+		bankAccount = bankServiceImpl.createAccount();
+
 	}
-	
+
 	
 	@Test
-	public void testDeposit() throws Exception {
-	
-		BigDecimal result=bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(3.0));
-	
-		Assert.assertEquals(new BigDecimal(3.0).toBigInteger(), result.toBigInteger());
+	public void testBookMethodToReturnBalance() throws Exception {
+
+		BigDecimal result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(3.0));
+
+		Assert.assertEquals(new BigDecimal(3).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
 	}
 
-	
-	
-	
-	
-//	@Test
-//	public void testWithdrawal() {
-//		Account account1 = new Account(1);
-//		boolean result = bank.withdrawal(account1, 30.175);
-//
-//		// System.out.println(result);
-//		Assert.assertFalse(result);
-//
-//		Assert.assertTrue(bank.deposit(account1, 100));
-//		Assert.assertTrue(bank.withdrawal(account1, 30));
 
+	@Test
+	public void testBookMethodWithBigDecimal() throws Exception {
+
+		BigDecimal result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(3.175));
+
+		Assert.assertEquals(new BigDecimal(3.175).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
+
+	}
+
+	@Test
+	public void testBookMethodWithTwoBookings() throws Exception {
+		BigDecimal result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(3.175));
+		 result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(1.825));
+
+		Assert.assertEquals(new BigDecimal(5.0), result.setScale(0, RoundingMode.HALF_UP));
+
+	}
+	
+	@Test
+	public void testDepositMethod() throws Exception {
+		BigDecimal result = atmController.deposit(bankAccount.getAccountNumber(), new BigDecimal(2.5));
+		Assert.assertEquals(new BigDecimal(2.5).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
+		
+	}
+	
+	
 }
+
