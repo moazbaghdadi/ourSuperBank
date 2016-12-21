@@ -48,12 +48,14 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public BigDecimal book(String accountNumber, BigDecimal amount) {
-		if (accountNumber == null || accountNumber.length() < 0) {
-			throw new BankServiceBookingException("AccountNumber is NOT allowed to be null or empty");
-		}
+		// [krausg] wird ersetzt durch aop, meint [fabio]
+		// if (accountNumber == null || accountNumber.length() <= 0) {
+		// throw new BankServiceBookingException("AccountNumber is NOT allowed
+		// to be null or empty");
+		// }
 
 		BankAccount bankAccount = accountRepository.findBankAccountByAccountNumber(accountNumber);
-		if (isGreaterThanZero(amount)) {
+		if (isGreaterEqualsThanZero(amount)) {
 			bankAccount.setBalance(bankAccount.getBalance().add(amount));
 		} else {
 			bankAccount.setBalance(bankAccount.getBalance().subtract(amount));
@@ -63,8 +65,13 @@ public class BankServiceImpl implements BankService {
 		return bankAccount.getBalance();
 	}
 
-	private boolean isGreaterThanZero(BigDecimal amount) {
-		return amount.compareTo(BigDecimal.ZERO) > 0;
+	/**
+	 * Checks if a BigDecimal is greater than 0
+	 * @param amount bigdecimal instance
+	 * @return boolean will be true, if it is greater or equals than 0 false 
+	 */
+	private boolean isGreaterEqualsThanZero(BigDecimal amount) {
+		return amount.compareTo(BigDecimal.ZERO) >= 0;
 	}
 
 	public BankAccountRepository getAccountRepository() {
