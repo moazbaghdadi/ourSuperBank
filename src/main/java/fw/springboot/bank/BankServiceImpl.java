@@ -25,7 +25,9 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public BankAccount createAccount() {
-		return new BankAccount(numberGenerator.getNextNumber());
+		BankAccount bankAccount = new BankAccount(numberGenerator.getNextNumber());
+		accountRepository.save(bankAccount);
+		return bankAccount;
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public BigDecimal book(String accountNumber, BigDecimal amount) {
-		// TODO Auto-generated method stub
+		// accountRepository.findBankAccountByAccountNumber(accountNumber)
 		return null;
 	}
 
