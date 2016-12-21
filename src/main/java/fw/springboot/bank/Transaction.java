@@ -13,7 +13,7 @@ public class Transaction {
 	private Status status;
 	
 	public enum Status{
-		FINISHED, IN_PROGRESS, FAILED
+		FINISHED, IN_PROCESS, FAILED
 	}
 
 
@@ -22,7 +22,7 @@ public class Transaction {
 		this.fromAccount = from;
 		this.toAccount = to;
 		this.amount = amount;
-		this.setStatus(Status.IN_PROGRESS);
+		this.setStatus(Status.IN_PROCESS);
 	}
 	
 
