@@ -43,7 +43,7 @@ public class CreateAccountTest {
 		bankAccount = bankServiceImpl.createAccount();
 		String num = bankAccount.getAccountNumber();
 		// System.out.println("Hier Test " + num);
-		Assert.assertEquals("S2", num);
+		Assert.assertEquals("S"+bAccRep.count(), num);
 	}
 
 	@Test
