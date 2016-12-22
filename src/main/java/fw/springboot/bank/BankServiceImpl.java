@@ -54,29 +54,29 @@ public class BankServiceImpl implements BankService {
 	}
 
 	@Override
-	public Transaction book(Transaction tx)  {
-		
-		if(tx.getFrom() == null && tx.getTo() == null){
+	public Transaction book(Transaction tx) {
+
+		if (tx.getFromAccount() == null && tx.getToAccount() == null) {
 			tx.setStatus(Transaction.Status.FAILED);
 			return tx;
 		}
-		
-		try{
+
+		try {
 			BankAccount bankAccount;
 
-			if(tx.getFrom() != null){
-				//deposit
-				bankAccount = getOneAccount(tx.getFrom());
+			if (tx.getFromAccount() != null) {
+				// deposit
+				bankAccount = getOneAccount(tx.getFromAccount());
 				bankAccount.setBalance(bankAccount.getBalance().subtract(tx.getAmount()));
-			}else {
-				//withdrawal
-				bankAccount = getOneAccount(tx.getTo());
+			} else {
+				// withdrawal
+				bankAccount = getOneAccount(tx.getToAccount());
 				bankAccount.setBalance(bankAccount.getBalance().add(tx.getAmount()));
 			}
 
-			accountRepository.save(bankAccount);			
+			accountRepository.save(bankAccount);
 			tx.setStatus(Transaction.Status.FINISHED);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			tx.setStatus(Transaction.Status.FAILED);
 		}
 
