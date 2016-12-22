@@ -3,8 +3,13 @@ package fw.springboot.bank;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.test.context.jdbc.SqlConfig.TransactionMode;
+
+import com.hazelcast.client.impl.protocol.codec.TransactionalMapMessageType;
 
 import fw.springboot.bank.exception.BankServiceException;
 
@@ -54,18 +59,33 @@ public class BankServiceImpl implements BankService {
 	}
 
 	@Override
-	public BigDecimal book(String accountNumber, BigDecimal amount) {
-		// [krausg] wird ersetzt durch aop, meint [fabio]
-		// if (accountNumber == null || accountNumber.length() <= 0) {
-		// throw new BankServiceException("AccountNumber is NOT allowed
-		// to be null or empty");
-		// }
+	public Transaction book(Transaction tx)  {
+		
+		if(tx.getFrom() == null && tx.getTo() == null){
+			tx.setStatus(Transaction.Status.FAILED);
+			return tx;
+		}
+		
+		try{
+			BankAccount bankAccount;
 
-		BankAccount bankAccount = getOneAccount(accountNumber);
-		bankAccount.setBalance(bankAccount.getBalance().add(amount));
-		accountRepository.save(bankAccount);
+			if(tx.getFrom() != null){
+				//deposit
+				bankAccount = getOneAccount(tx.getFrom());
+				bankAccount.setBalance(bankAccount.getBalance().subtract(tx.getAmount()));
+			}else {
+				//withdrawal
+				bankAccount = getOneAccount(tx.getTo());
+				bankAccount.setBalance(bankAccount.getBalance().add(tx.getAmount()));
+			}
 
-		return bankAccount.getBalance();
+			accountRepository.save(bankAccount);			
+			tx.setStatus(Transaction.Status.FINISHED);
+		}catch (Exception e) {
+			tx.setStatus(Transaction.Status.FAILED);
+		}
+
+		return tx;
 	}
 
 	/**

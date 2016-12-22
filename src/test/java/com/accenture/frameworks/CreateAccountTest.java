@@ -1,6 +1,7 @@
 package com.accenture.frameworks;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class CreateAccountTest {
 		bankAccount = bankServiceImpl.createAccount();
 		String num = bankAccount.getAccountNumber();
 		// System.out.println("Hier Test " + num);
-		Assert.assertEquals("SB2", num);
+		Assert.assertEquals("S2", num);
 	}
 
 	@Test
@@ -55,7 +56,7 @@ public class CreateAccountTest {
 
 		acc = bankServiceImpl.getOneAccount(num);
 		Assert.assertEquals(num, acc.getAccountNumber());
-		Assert.assertEquals(balance1, acc.getBalance());
+		Assert.assertEquals(balance1.setScale(0, RoundingMode.HALF_UP), acc.getBalance().setScale(0, RoundingMode.HALF_UP));
 	}
 
 }

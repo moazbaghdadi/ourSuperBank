@@ -22,14 +22,14 @@ public class ATMController {
 	
 	//Methode deposit
 	@RequestMapping(value="/deposit/{accountNumber}/{amount}", method=RequestMethod.POST)
-	public BigDecimal deposit (@PathVariable("accountNumber")String accountNumber, @PathVariable("amount")BigDecimal amount){
-		return bankService.book(accountNumber, amount);
+	public Transaction.Status deposit (@PathVariable("accountNumber")String accountNumber, @PathVariable("amount")BigDecimal amount){
+		return bankService.book(new Transaction(null, accountNumber, amount)).getStatus();
 	}
 	
 	//Methode withdrawal
 	@RequestMapping(value="/withdrawal/{accountNumber}/{amount}", method=RequestMethod.POST)
-	public BigDecimal withdrawal (@PathVariable("accountNumber") String accountNumber, @PathVariable("amount") BigDecimal amount){
-		return bankService.book(accountNumber, amount.negate());
+	public Transaction.Status withdrawal (@PathVariable("accountNumber") String accountNumber, @PathVariable("amount") BigDecimal amount){
+		return bankService.book(new Transaction(accountNumber, null, amount)).getStatus();
 	}
 
 }

@@ -33,10 +33,9 @@ public interface BankService {
 
 	/**
 	 * queries BankRepository through accountNumber to getthe BankAccount instance and then adds the amount to the balance of the Account and updates the Database
-	 * @param accountNumber number of the BankAccount
-	 * @param amount a BigDecimal instance with the value of the book Amount
-	 * @return a BigDecimal instance with the value of the new Balance of the BankAccount
+	 * @param tx Transactional object 
+	 * @return a Transactional instance with the updated status the Transaction
 	 */
-	public BigDecimal book(String accountNumber, BigDecimal amount);
+	public Transaction book(Transaction tx);
 
 }
