@@ -20,6 +20,7 @@ import fw.springboot.bank.BankApplication;
 import fw.springboot.bank.BankService;
 import fw.springboot.bank.BankServiceImpl;
 import fw.springboot.bank.Transaction;
+import fw.springboot.bank.Transaction.Status;
 
 
 @RunWith(SpringRunner.class)
@@ -53,42 +54,62 @@ public class DepositTest {
 		assertEquals(new BigDecimal(3.0).setScale(0, RoundingMode.HALF_UP), bankAccountActualisiert.getBalance().setScale(0, RoundingMode.HALF_UP));
 	}
 
-	//TODO refactor tests
+	@Test
+	public void testBookMethodWithBigDecimal() throws Exception {
+		Transaction tx = new Transaction(null, bankAccount.getAccountNumber(), new BigDecimal(3.175));
+		Transaction txresult = bankServiceImpl.book(tx);
 
-//	@Test
-//	public void testBookMethodWithBigDecimal() throws Exception {
-//
-//		BigDecimal result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(3.175));
-//
-//		Assert.assertEquals(new BigDecimal(3.175).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
-//
-//	}
-//
-//	@Test
-//	public void testBookMethodWithTwoBookings() throws Exception {
-//		BigDecimal result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(3.175));
-//		 result = bankServiceImpl.book(bankAccount.getAccountNumber(), new BigDecimal(1.825));
-//
-//		Assert.assertEquals(new BigDecimal(5.0), result.setScale(0, RoundingMode.HALF_UP));
-//
-//	}
-//	
-//	@Test
-//	public void testDepositMethod() throws Exception {
-//		BigDecimal result = atmController.deposit(bankAccount.getAccountNumber(), new BigDecimal(2.5));
-//		Assert.assertEquals(new BigDecimal(2.5).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
-//		
-//	}
-//	
-//	@Test
-//	public void testWithdrawalMethod() throws Exception {
-//		BigDecimal result = atmController.withdrawal(bankAccount.getAccountNumber(), new BigDecimal(4.5));
-//		Assert.assertEquals(new BigDecimal(-4.5).setScale(0, RoundingMode.HALF_UP), result.setScale(0, RoundingMode.HALF_UP));
-//	
-//		
-//	}
-	
+		assertEquals(txresult.getStatus(), Transaction.Status.FINISHED);
 
+		BankAccount bankAccountActualisiert = bankServiceImpl.getOneAccount(bankAccount.getAccountNumber());
+
+		Assert.assertEquals(new BigDecimal(3.175).setScale(0, RoundingMode.HALF_UP), bankAccountActualisiert.getBalance().setScale(0, RoundingMode.HALF_UP));
+
+	}
+
+	@Test
+	public void testBookMethodWithTwoBookings() throws Exception {
+		Transaction tx = new Transaction(null, bankAccount.getAccountNumber(), new BigDecimal(3.175));
+		Transaction txresult = bankServiceImpl.book(tx);
+		
+		assertEquals(txresult.getStatus(), Transaction.Status.FINISHED);
+
+		tx = new Transaction(null, bankAccount.getAccountNumber(), new BigDecimal(1.825));
+		txresult = bankServiceImpl.book(tx);
+
+		assertEquals(txresult.getStatus(), Transaction.Status.FINISHED);
+
+		BankAccount bankAccountActualisiert = bankServiceImpl.getOneAccount(bankAccount.getAccountNumber());
+
+		Assert.assertEquals(new BigDecimal(5.0).setScale(0, RoundingMode.HALF_UP), bankAccountActualisiert.getBalance().setScale(0, RoundingMode.HALF_UP));
+
+	}
 	
+	@Test
+	public void testDepositMethod() throws Exception {
+		Transaction tx = new Transaction(null, bankAccount.getAccountNumber(), new BigDecimal(4));
+		Status statusResult = atmController.deposit(tx.getToAccount(), tx.getAmount());
+
+		assertEquals(statusResult, Transaction.Status.FINISHED);
+
+		BankAccount bankAccountActualisiert = bankServiceImpl.getOneAccount(bankAccount.getAccountNumber());
+
+		Assert.assertEquals(new BigDecimal(4.0).setScale(0, RoundingMode.HALF_UP), bankAccountActualisiert.getBalance().setScale(0, RoundingMode.HALF_UP));
+	}
 	
+	@Test
+	public void testWithdrawalMethod() throws Exception {
+		Transaction tx = new Transaction(bankAccount.getAccountNumber(), null, new BigDecimal(4));
+		Status statusResult = atmController.deposit(tx.getFromAccount(), new BigDecimal(10000));
+
+		assertEquals(statusResult, Transaction.Status.FINISHED);
+
+		statusResult = atmController.withdrawal(tx.getFromAccount(), tx.getAmount());
+
+		assertEquals(statusResult, Transaction.Status.FINISHED);
+
+		BankAccount bankAccountActualisiert = bankServiceImpl.getOneAccount(bankAccount.getAccountNumber());
+
+		Assert.assertEquals(new BigDecimal(9996.0).setScale(0, RoundingMode.HALF_UP), bankAccountActualisiert.getBalance().setScale(0, RoundingMode.HALF_UP));
+	}
 }
