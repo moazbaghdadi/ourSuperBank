@@ -11,11 +11,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fw.springboot.bank.BankAccount;
 import fw.springboot.bank.BankAccountRepository;
+import fw.springboot.bank.BankApplication;
 import fw.springboot.bank.BankServiceImpl;
-import fw.springboot.bank.SpringbootDemoApplication;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringbootDemoApplication.class })
+@SpringBootTest(classes = { BankApplication.class })
 public class CreateAccountTest {
 
 	@Autowired
