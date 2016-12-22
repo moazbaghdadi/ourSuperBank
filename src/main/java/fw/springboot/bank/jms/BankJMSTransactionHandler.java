@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import fw.springboot.bank.BankService;
 import fw.springboot.bank.Transaction;
+import fw.springboot.bank.Transaction.Status;
 
 @Component
 public class BankJMSTransactionHandler {
@@ -19,8 +20,10 @@ public class BankJMSTransactionHandler {
 	}
 
 	public void proceedTransaction(Transaction incomingTransaction) {
+		if (incomingTransaction.getStatus() == Status.IN_PROCESS) {
 		Transaction proceededTransaction = bankService.book(incomingTransaction);
 		bankJMSProducer.sendTransaction(proceededTransaction);
+		}
 
 	}
 
