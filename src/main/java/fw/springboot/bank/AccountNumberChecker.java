@@ -2,12 +2,12 @@ package fw.springboot.bank;
 
 import org.springframework.beans.factory.annotation.Value;
 
-public class AccountNumberValidator {
+public class AccountNumberChecker {
 
 	@Value("${bank.prefix}")
 	private static String accountNumberPrefix;
 
-	static boolean validateAccountNumber(String accountNumber) {
+	static boolean checkAccountNumerIfFromOurBank(String accountNumber) {
 
 		return accountNumber.startsWith(accountNumberPrefix);
 
