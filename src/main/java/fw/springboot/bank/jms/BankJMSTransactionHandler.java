@@ -23,6 +23,8 @@ public class BankJMSTransactionHandler {
 		if (incomingTransaction.getStatus() == Status.IN_PROCESS) {
 		Transaction proceededTransaction = bankService.book(incomingTransaction);
 		bankJMSProducer.sendTransaction(proceededTransaction);
+		} else {
+			// das is eine antwort an uns
 		}
 
 	}
