@@ -1,10 +1,12 @@
 package fw.springboot.bank.jms;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import fw.springboot.bank.BankService;
 import fw.springboot.bank.Transaction;
 
+@Component
 public class BankJMSTransactionHandler {
 
 	@Autowired
