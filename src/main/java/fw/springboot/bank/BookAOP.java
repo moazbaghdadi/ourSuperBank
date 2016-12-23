@@ -19,7 +19,6 @@ public class BookAOP {
 
 	@Around("execution(* fw.springboot.bank.BankService.book(..))")
 	public Transaction logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-
 		Transaction tx = (Transaction) joinPoint.getArgs()[0];
 		
 		if (tx.getFromAccount() == null && tx.getToAccount() == null) {

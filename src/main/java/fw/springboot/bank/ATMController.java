@@ -16,7 +16,7 @@ public class ATMController {
 	
 	//Methode getBalance
 	@RequestMapping(value="/balance/{accountNumber}", method=RequestMethod.GET)
-	public BigDecimal getBalance (@PathVariable("accountNumber") String accountNumber){
+	public BigDecimal getBalance(@PathVariable("accountNumber") String accountNumber){
 		return bankService.getBalance(accountNumber);
 	}
 	

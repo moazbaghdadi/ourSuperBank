@@ -55,12 +55,6 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public Transaction book(Transaction tx) {
-
-		if (tx.getFromAccount() == null && tx.getToAccount() == null) {
-			tx.setStatus(Transaction.Status.FAILED);
-			return tx;
-		}
-
 		try {
 			BankAccount bankAccount;
 
@@ -73,7 +67,6 @@ public class BankServiceImpl implements BankService {
 				bankAccount = getOneAccount(tx.getToAccount());
 				bankAccount.setBalance(bankAccount.getBalance().add(tx.getAmount()));
 			}
-
 			accountRepository.save(bankAccount);
 			tx.setStatus(Transaction.Status.FINISHED);
 		} catch (Exception e) {
