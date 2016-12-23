@@ -51,19 +51,19 @@ sendHttpPostRequest(url, body, result) {
   })
   .then((responseData) =>{
     result(responseData);
-  });
+  })  ;
 }
 
 getBalance_onClick() {
   if(this.checkAccountNumber()) {
-    var url = 'http://localhost:8080/balance/' + this.state.accountNumber;
+    var url = 'http://10.10.3.63:8080/balance/' + this.state.accountNumber;
     this.sendHttpGetRequest(url, (x => this.setState({balance : x})));
   }
 }
 
 deposit() {
   if(this.checkAccountNumber()) {
-    var url = 'http://localhost:8080/deposit/' + this.state.accountNumber + '/' + this.state.amount;
+    var url = 'http://10.10.3.63:8080/deposit/' + this.state.accountNumber + '/' + this.state.amount;
     var data = {'accountNumber':this.state.accountNumber,
                 'amount':this.state.amount};
     var body = JSON.stringify(data);
@@ -79,7 +79,7 @@ deposit() {
 
 withdrawal() {
   if(this.checkAccountNumber()) {
-    var url = 'http://localhost:8080/withdrawal/' + this.state.accountNumber + '/' + this.state.amount;
+    var url = 'http://10.10.3.63:8080/withdrawal/' + this.state.accountNumber + '/' + this.state.amount;
     var data = {'accountNumber':this.state.accountNumber,
                 'amount':this.state.amount}
     var body = JSON.stringify(data);
