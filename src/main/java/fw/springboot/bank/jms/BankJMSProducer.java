@@ -25,6 +25,7 @@ public class BankJMSProducer {
 	}
 
 	public void sendTransaction(final Transaction sendingTransaction) {
+		System.out.println("have to send message:" + sendingTransaction);
 		jmsTemplate.convertAndSend(queueName, sendingTransaction);
 	}
 
